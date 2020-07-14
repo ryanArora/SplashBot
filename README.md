@@ -1,3 +1,3 @@
 # SplashBot
 
-Simplifies splashing in Hypixel Skyblock
+Discord bot to simplify splashing in Hypixel Skyblock
