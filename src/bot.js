@@ -5,6 +5,7 @@ class SplashBot extends Client {
   constructor(options) {
     super(options);
     this.config = config;
+    this.prefix = '!';
   }
 }
 
