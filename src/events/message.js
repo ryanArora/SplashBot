@@ -1,13 +1,17 @@
 class Message {
-  constructor(client) {
+  constructor(client, redis) {
     this.client = client;
+    this.redis = redis;
   }
 
   async run(message) {
     if (message.author.bot) return;
-    if (message.content.indexOf(this.client.prefix) !== 0) return;
 
-    const args = message.content.slice(this.client.prefix.length).trim().split(/ +/g);
+    let prefix = await this.redis.get(message.channel.guild.id);
+    if (!prefix) prefix = this.client.defaultPrefix;
+    if (!message.content.startsWith(prefix)) return;
+
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
   }
 }
