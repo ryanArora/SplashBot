@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const SplashBot = require('./bot.js');
+const SplashBot = require('./client.js');
 
 const readdir = promisify(fs.readdir);
 
