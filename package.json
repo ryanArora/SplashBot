@@ -2,7 +2,7 @@
   "name": "splash-bot",
   "private": true,
   "scripts": {
-    "dev": "nodemon src/client.js"
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "discord.js": "^12.2.0",
