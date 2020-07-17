@@ -17,8 +17,9 @@ redisClient.get = promisify(redisClient.get);
 redisClient.set = promisify(redisClient.set);
 
 const client = new SplashBot();
+
 (async () => {
-  // Event Handler
+  // Event Loader
   const evtFiles = await readdir(path.join(__dirname, 'events'));
   console.log(`Loading a total of ${evtFiles.length} events.`);
 
@@ -30,6 +31,16 @@ const client = new SplashBot();
     client.on(evtName, (...args) => evt.run(...args));
   });
 
+  // Command Loader
+  const cmdFiles = await readdir(path.join(__dirname, 'commands'));
+  console.log(`Loading a total of ${cmdFiles.length} commands.`);
+  cmdFiles.forEach((file) => {
+    if (!file.endsWith('.js')) return;
+
+    const cmdName = file.split('.')[0];
+    client.loadCommand(cmdName);
+  });
+
   // Login
-  client.login(client.config.token);
+  client.login(client.token);
 })();
