@@ -3,18 +3,9 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const redis = require('redis');
 const SplashBot = require('./client.js');
 
 const readdir = promisify(fs.readdir);
-
-const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-});
-
-redisClient.get = promisify(redisClient.get);
-redisClient.set = promisify(redisClient.set);
 
 const client = new SplashBot();
 
@@ -27,7 +18,7 @@ const client = new SplashBot();
     if (!file.endsWith('.js')) return;
 
     const evtName = file.split('.')[0];
-    const evt = new (require('./events/' + file))(client, redisClient);
+    const evt = new (require('./events/' + file))(client);
     client.on(evtName, (...args) => evt.run(...args));
   });
 
