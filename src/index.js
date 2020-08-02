@@ -1,13 +1,13 @@
-require('dotenv').config();
+if (process.env.NODE_ENV === 'development') require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const SplashBot = require('./client.js');
+const Discord = require('discord.js');
 
 const readdir = promisify(fs.readdir);
 
-const client = new SplashBot();
+const client = new Discord.Client();
 
 (async () => {
   // Event Loader
@@ -18,20 +18,26 @@ const client = new SplashBot();
     if (!file.endsWith('.js')) return;
 
     const evtName = file.split('.')[0];
-    const evt = new (require('./events/' + file))(client);
-    client.on(evtName, (...args) => evt.run(...args));
+    const evt = require('./events/' + file);
+
+    client.on(evtName, (...args) => {
+      evt(client, ...args);
+    });
   });
 
   // Command Loader
   const cmdFiles = await readdir(path.join(__dirname, 'commands'));
   console.log(`Loading a total of ${cmdFiles.length} commands.`);
+
+  client.commands = {};
+
   cmdFiles.forEach((file) => {
     if (!file.endsWith('.js')) return;
 
     const cmdName = file.split('.')[0];
-    client.loadCommand(cmdName);
+    client.commands[cmdName] = require(`./commands/${file}`);
   });
 
   // Login
-  client.login(client.token);
+  client.login(process.env.DISCORD_TOKEN);
 })();

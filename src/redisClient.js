@@ -6,7 +6,6 @@ const redisClient = redis.createClient({
   port: process.env.REDIS_PORT,
 });
 
-redisClient.get = promisify(redisClient.get);
-redisClient.set = promisify(redisClient.set);
+redisClient.hgetall = promisify(redisClient.hgetall);
 
 module.exports = redisClient;

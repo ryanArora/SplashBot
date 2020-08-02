@@ -1,32 +1,27 @@
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
+const redis = require('../redisClient.js');
 
-const readdir = promisify(fs.readdir);
+const message = async (client, message) => {
+  if (message.author.bot) return;
+  if (!message.guild) return;
 
-class Message {
-  constructor(client) {
-    this.client = client;
+  const defaultSettings = { prefix: '!sb' };
+  const guildSettings = (await redis.hgetall(message.guild.id)) || {};
+  const settings = { ...defaultSettings, ...guildSettings };
+
+  if (!message.content.startsWith(settings.prefix)) return;
+
+  const args = message.content.trim().slice(settings.prefix.length).trim().split(/ +/g);
+  const command = args.shift().toLowerCase();
+
+  message.args = args;
+
+  if (client.commands[command]) {
+    client.commands[command](client, message);
+  } else {
+    message.channel.send(`\`Command not found. Please run ${settings.prefix}${settings.prefix.length > 1 ? ' ' : ''}help for a list of all commands\``);
   }
+};
 
-  async run(message) {
-    if (message.author.bot) return;
-    if (message.guild === null) return;
-
-    let prefix = await this.client.redis.get(message.channel.guild.id);
-    if (prefix === null) prefix = this.client.setings.defualtPrefix;
-
-    if (!message.content.startsWith(prefix)) return;
-
-    const args = message.content.trim().slice(prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
-
-    if (this.client.commands[command]) {
-      this.client.commands[command].run(message, args);
-    } else {
-      message.channel.send(`\`Command not found. Please run ${prefix}${prefix.length > 1 ? ' ' : ''}help for a list of all commands\``);
-    }
-  }
-}
-
-module.exports = Message;
+module.exports = message;

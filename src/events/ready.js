@@ -1,11 +1,5 @@
-class Ready {
-  constructor(client) {
-    this.client = client;
-  }
+const ready = (client) => {
+  console.log(`${client.user.tag} is serving ${client.users.cache.size} users in ${client.guilds.cache.size} servers.`);
+};
 
-  async run() {
-    console.log(`${this.client.user.tag} is serving ${this.client.users.cache.size} users in ${this.client.guilds.cache.size} servers.`);
-  }
-}
-
-module.exports = Ready;
+module.exports = ready;
