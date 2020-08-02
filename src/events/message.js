@@ -10,6 +10,11 @@ const message = async (client, message) => {
   const guildSettings = (await redis.hgetall(message.guild.id)) || {};
   const settings = { ...defaultSettings, ...guildSettings };
 
+  const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+  if (message.content.match(prefixMention)) {
+    return message.reply(`My prefix on this server is \`${settings.prefix}\``);
+  }
+
   if (!message.content.startsWith(settings.prefix)) return;
 
   const args = message.content.trim().slice(settings.prefix.length).trim().split(/ +/g);
