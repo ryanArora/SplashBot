@@ -1,13 +1,13 @@
 {
-  "name": "splash-bot",
+  "name": "discord-bot",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "nodemon src/index.js"
   },
   "dependencies": {
-    "discord.js": "^12.2.0",
-    "dotenv": "^8.2.0",
-    "redis": "^3.0.2"
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

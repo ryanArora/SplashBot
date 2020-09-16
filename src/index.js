@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV === 'development') require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
@@ -8,6 +8,10 @@ const Discord = require('discord.js');
 const readdir = promisify(fs.readdir);
 
 const client = new Discord.Client();
+
+client.settings = {
+  prefix: '!',
+};
 
 (async () => {
   // Event Loader
