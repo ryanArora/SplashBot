@@ -9,6 +9,10 @@ const readdir = promisify(fs.readdir);
 
 const client = new Discord.Client();
 
+client.settings = {
+  prefix: '!',
+};
+
 (async () => {
   // Event Loader
   const evtFiles = await readdir(path.join(__dirname, 'events'));

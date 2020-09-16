@@ -1,23 +1,18 @@
 const fs = require('fs');
 const path = require('path');
-const redis = require('../redisClient.js');
 
 const message = async (client, message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
 
-  const defaultSettings = { prefix: '!sb' };
-  const guildSettings = (await redis.hgetall(message.guild.id)) || {};
-  const settings = { ...defaultSettings, ...guildSettings };
-
   const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
   if (message.content.match(prefixMention)) {
-    return message.reply(`My prefix on this server is \`${settings.prefix}\``);
+    return message.reply(`My prefix on this server is \`${client.settings.prefix}\``);
   }
 
-  if (!message.content.startsWith(settings.prefix)) return;
+  if (!message.content.startsWith(client.settings.prefix)) return;
 
-  const args = message.content.trim().slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content.trim().slice(client.settings.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   message.args = args;
@@ -25,7 +20,7 @@ const message = async (client, message) => {
   if (client.commands[command]) {
     client.commands[command](client, message);
   } else {
-    message.channel.send(`\`Command not found. Please run ${settings.prefix}${settings.prefix.length > 1 ? ' ' : ''}help for a list of all commands\``);
+    message.channel.send(`\`Command not found. Please run ${client.settings.prefix}help for a list of all commands\``);
   }
 };
 
