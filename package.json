@@ -1,5 +1,6 @@
 {
-  "name": "splash-bot",
+  "name": "discord-bot",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "nodemon src/index.js"
