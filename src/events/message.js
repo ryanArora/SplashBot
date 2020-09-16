@@ -18,7 +18,12 @@ const message = async (client, message) => {
   message.args = args;
 
   if (client.commands[command]) {
-    client.commands[command](client, message);
+    try {
+      client.commands[command](client, message);
+    } catch (e) {
+      console.log(e);
+      message.channel.send('Internal server error, please contact the bot owner if this error persists');
+    }
   } else {
     message.channel.send(`\`Command not found. Please run ${client.settings.prefix}help for a list of all commands\``);
   }
