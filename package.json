@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "node src/client.js",
+    "dev": "nodemon src/client.js"
   },
   "dependencies": {
     "discord.js": "^12.3.1",
